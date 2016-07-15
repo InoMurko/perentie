@@ -3,12 +3,15 @@ defmodule Perentie.Serializer do
   		:skip
   	end
 
-	def encode({time, {:trace, _pid, _, {mod, function, _args}, result}}) do
+	def encode({time, {:trace, _pid, _, {mod, function, args}, result}}) do
   		%{	#:time => :calendar.now_to_local_time(time),
   			:tracing => 
-  				Atom.to_string(mod) <> " " <>Atom.to_string(function),
+  				Atom.to_string(mod) <> " " <> Atom.to_string(function) <> " " 
+          <> :io_lib.write(args) 
+            |> List.flatten 
+            |> to_string,
   			:result => 
-  				result
+          :io_lib.write(result) |> List.flatten |> to_string
   		}
   	end
 
